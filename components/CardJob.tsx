@@ -10,11 +10,11 @@ interface Loker {
   idloker?: number;
   perusahaan?: {
     nama?: string;
-  };
+  }[];
   nama?: string;
   pendidikan?: {
     nama?: string;
-  };
+  }[];
   usia_min?: number;
   usia_max?: number;
   gaji_min?: number;
@@ -83,9 +83,9 @@ export default function CardJob() {
             <div className="mb-2 text-xl font-bold text-white">
               {loker.nama}
             </div>
-            <div className="text-gray-400">{loker.perusahaan?.nama}</div>
+            <div className="text-gray-400">{loker.perusahaan?.[0].nama}</div>
             <div className="text-gray-400">
-              Pendidikan minimal: {loker.pendidikan?.nama}
+              Pendidikan minimal: {loker.pendidikan?.[0].nama}
             </div>
             <div className="text-gray-400">
               Gaji: {formatRupiah(loker.gaji_min!)} -{" "}
