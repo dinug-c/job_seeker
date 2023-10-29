@@ -9,11 +9,11 @@ interface Loker {
   idloker?: number;
   perusahaan?: {
     nama?: string;
-  }[];
+  };
   nama?: string;
   pendidikan?: {
     nama?: string;
-  }[];
+  };
   usia_min?: number;
   usia_max?: number;
   gaji_min?: number;
@@ -25,6 +25,18 @@ interface Loker {
   tgl_aktif?: string;
   tgl_tutup?: string;
   status?: string;
+}
+
+interface Perusahaan {
+  perusahaan?: {
+    nama?: string;
+  };
+}
+
+interface Pendidikan {
+  pendidikan?: {
+    nama?: string;
+  };
 }
 
 export default function DetailJob() {
@@ -63,7 +75,24 @@ export default function DetailJob() {
         }
 
         if (loker.length > 0) {
-          setLoker(loker[0]);
+          const perusahaan: Perusahaan = loker[0].perusahaan! as Perusahaan;
+          const pendidikan: Pendidikan = loker[0].pendidikan! as Pendidikan;
+          setLoker({
+            idloker: loker[0].idloker,
+            perusahaan: perusahaan.perusahaan,
+            nama: loker[0].nama,
+            pendidikan: pendidikan.pendidikan,
+            usia_min: loker[0].usia_min,
+            usia_max: loker[0].usia_max,
+            gaji_min: loker[0].gaji_min,
+            gaji_max: loker[0].gaji_max,
+            nama_cp: loker[0].nama_cp,
+            email_cp: loker[0].email_cp,
+            no_telp_cp: loker[0].no_telp_cp,
+            tgl_aktif: loker[0].tgl_aktif,
+            tgl_tutup: loker[0].tgl_tutup,
+            status: loker[0].status,
+          });
         }
       }
     }
@@ -76,9 +105,9 @@ export default function DetailJob() {
       {loker ? (
         <div>
           <div className="mb-2 text-xl font-bold text-white">{loker.nama}</div>
-          <div className="text-gray-400">{loker.perusahaan?.[0].nama}</div>
+          <div className="text-gray-400">{loker.perusahaan?.nama}</div>
           <div className="text-gray-400">
-            Pendidikan minimal: {loker.pendidikan?.[0].nama}
+            Pendidikan minimal: {loker.pendidikan?.nama}
           </div>
           <div className="text-gray-400">
             Gaji: {formatRupiah(loker.gaji_min!)} -{" "}

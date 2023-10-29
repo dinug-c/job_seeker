@@ -28,6 +28,18 @@ interface Loker {
   status?: boolean;
 }
 
+interface Perusahaan {
+  perusahaan?: {
+    nama?: string;
+  };
+}
+
+interface Pendidikan {
+  pendidikan?: {
+    nama?: string;
+  };
+}
+
 export default function CardJob() {
   const supabase = createClientComponentClient();
   const [loker, setLoker] = useState<Loker[]>([]);
@@ -52,7 +64,7 @@ export default function CardJob() {
         console.log(error);
         return;
       }
-      console.log(loker);
+
       setLoker(loker);
     }
 
@@ -83,9 +95,12 @@ export default function CardJob() {
             <div className="mb-2 text-xl font-bold text-white">
               {loker.nama}
             </div>
-            <div className="text-gray-400">{loker.perusahaan?.[0].nama}</div>
             <div className="text-gray-400">
-              Pendidikan minimal: {loker.pendidikan?.[0].nama}
+              {(loker.perusahaan as Perusahaan).perusahaan?.nama}
+            </div>
+            <div className="text-gray-400">
+              Pendidikan minimal:{" "}
+              {(loker.pendidikan as Pendidikan).pendidikan?.nama}
             </div>
             <div className="text-gray-400">
               Gaji: {formatRupiah(loker.gaji_min!)} -{" "}
