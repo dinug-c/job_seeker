@@ -14,4 +14,27 @@ const formatDate = (dateString: string) => {
   return format(date, "d MMMM yyyy", { locale: id }); // Menggunakan bahasa Indonesia
 };
 
-export { formatRupiah, formatDate };
+function calculateAge(birthdate: string) {
+  // Ubah string tanggal lahir menjadi objek Date
+  const birthdateDate = new Date(birthdate);
+
+  // Dapatkan tanggal hari ini
+  const today = new Date();
+
+  // Hitung selisih tahun
+  let age = today.getFullYear() - birthdateDate.getFullYear();
+
+  // Periksa apakah ulang tahun sudah terjadi atau belum
+  const birthdateThisYear = new Date(
+    today.getFullYear(),
+    birthdateDate.getMonth(),
+    birthdateDate.getDate()
+  );
+  if (today < birthdateThisYear) {
+    age--;
+  }
+
+  return age;
+}
+
+export { formatRupiah, formatDate, calculateAge };

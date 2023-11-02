@@ -1,125 +1,50 @@
-"use client";
+import AuthButton from "@/components/AuthButton";
+import Header from "@/components/Header";
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
+import React from "react";
+import DetailSection from "./detail";
+import { Button } from "@mui/material";
+import Link from "next/link";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { use, useEffect, useState } from "react";
-import { formatRupiah, formatDate } from "@/utils/date";
-import { useRouter, useSearchParams } from "next/navigation";
-
-interface Loker {
-  idloker?: number;
-  perusahaan?: {
-    nama?: string;
-  };
-  nama?: string;
-  pendidikan?: {
-    nama?: string;
-  };
-  usia_min?: number;
-  usia_max?: number;
-  gaji_min?: number;
-  gaji_max?: number;
-  nama_cp?: string;
-  email_cp?: string;
-  no_telp_cp?: string;
-  tgl_update?: string;
-  tgl_aktif?: string;
-  tgl_tutup?: string;
-  status?: string;
-}
-
-interface Perusahaan {
-  perusahaan?: {
-    nama?: string;
-  };
-}
-
-interface Pendidikan {
-  pendidikan?: {
-    nama?: string;
-  };
-}
-
-export default function DetailJob() {
-  const id = useSearchParams().get("id");
-  const supabase = createClientComponentClient();
-  const [loker, setLoker] = useState<Loker>();
-
-  useEffect(() => {
-    async function fetchLoker() {
-      if (id) {
-        const { data: loker, error } = await supabase
-          .from("loker")
-          .select(
-            `
-            idloker,
-            perusahaan: idperusahaan ( nama ),
-            nama,
-            pendidikan: pendidikan_min ( nama ),
-            usia_min,
-            usia_max,
-            gaji_min,
-            gaji_max,
-            nama_cp,
-            email_cp,
-            no_telp_cp,
-            tgl_aktif,
-            tgl_tutup,
-            status
-        `
-          )
-          .eq("idloker", id);
-
-        if (error) {
-          console.log(error);
-          return;
-        }
-
-        if (loker.length > 0) {
-          const perusahaan: Perusahaan = loker[0].perusahaan! as Perusahaan;
-          const pendidikan: Pendidikan = loker[0].pendidikan! as Pendidikan;
-          setLoker({
-            idloker: loker[0].idloker,
-            perusahaan: perusahaan.perusahaan,
-            nama: loker[0].nama,
-            pendidikan: pendidikan.pendidikan,
-            usia_min: loker[0].usia_min,
-            usia_max: loker[0].usia_max,
-            gaji_min: loker[0].gaji_min,
-            gaji_max: loker[0].gaji_max,
-            nama_cp: loker[0].nama_cp,
-            email_cp: loker[0].email_cp,
-            no_telp_cp: loker[0].no_telp_cp,
-            tgl_aktif: loker[0].tgl_aktif,
-            tgl_tutup: loker[0].tgl_tutup,
-            status: loker[0].status,
-          });
-        }
-      }
+export default async function DetailJob() {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const canInitSupabaseClient = () => {
+    try {
+      createClient(cookieStore);
+      return true;
+    } catch (e) {
+      return false;
     }
-
-    fetchLoker();
-  }, [id]);
-
+  };
+  const isLoggedIn = user ? true : false;
+  const isSupabaseConnected = canInitSupabaseClient();
   return (
-    <div className="p-4 transition-transform transform bg-gray-800 border rounded-lg shadow-md">
-      {loker ? (
-        <div>
-          <div className="mb-2 text-xl font-bold text-white">{loker.nama}</div>
-          <div className="text-gray-400">{loker.perusahaan?.nama}</div>
-          <div className="text-gray-400">
-            Pendidikan minimal: {loker.pendidikan?.nama}
-          </div>
-          <div className="text-gray-400">
-            Gaji: {formatRupiah(loker.gaji_min!)} -{" "}
-            {formatRupiah(loker.gaji_max!)}
-          </div>
-          <div className="text-gray-400">
-            Tanggal aktif: {formatDate(loker.tgl_aktif!)}
-          </div>
+    <div className="flex flex-col items-center flex-1 w-full gap-20">
+      <nav className="flex justify-center w-full h-16 border-b border-b-foreground/10">
+        <div className="flex items-center justify-between w-full max-w-4xl p-3 text-sm">
+          {isSupabaseConnected && <AuthButton />}
+          <Link
+            href="/"
+            className="flex px-3 py-2 no-underline rounded-md bg-btn-background hover:bg-btn-background-hover"
+          >
+            Home
+          </Link>
         </div>
-      ) : (
-        <div className="text-white">Loker tidak ditemukan.</div>
-      )}
+      </nav>
+
+      <div className="flex flex-col flex-1 max-w-4xl gap-20 px-3 opacity-0 animate-in">
+        <Header />
+      </div>
+      <DetailSection isLoggedIn={isLoggedIn} />
+
+      <footer className="flex justify-center w-full p-8 text-xs text-center border-t border-t-foreground/10">
+        <p>Built For Web Project PBP</p>
+      </footer>
     </div>
   );
 }
