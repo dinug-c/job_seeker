@@ -11,6 +11,7 @@ export default async function History() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  if (!user) window.location.href = "/login";
   const canInitSupabaseClient = () => {
     try {
       createClient(cookieStore);

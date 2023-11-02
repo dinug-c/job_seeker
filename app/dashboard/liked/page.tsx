@@ -13,6 +13,7 @@ export default async function liked() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  if (!user) window.location.href = "/login";
   const canInitSupabaseClient = () => {
     try {
       createClient(cookieStore);
