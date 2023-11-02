@@ -26,6 +26,12 @@ export default async function Dashboard() {
       <nav className="flex justify-center w-full h-16 border-b border-b-foreground/10">
         <div className="flex items-center justify-between w-full max-w-4xl p-3 text-sm">
           {isSupabaseConnected && <AuthButton />}
+          <Link
+            href="/"
+            className="flex px-3 py-2 no-underline rounded-md bg-btn-background hover:bg-btn-background-hover"
+          >
+            Home
+          </Link>
         </div>
       </nav>
 

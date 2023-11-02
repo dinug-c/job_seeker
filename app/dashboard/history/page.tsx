@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 
 import Link from "next/link";
+import DetailHistory from "./detail";
 export default async function History() {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
@@ -37,7 +38,7 @@ export default async function History() {
       <div className="flex flex-col flex-1 max-w-4xl gap-20 px-3 opacity-0 animate-in">
         <Header />
       </div>
-
+      <DetailHistory />
       <footer className="flex justify-center w-full p-8 text-xs text-center border-t border-t-foreground/10">
         <p>Built For Web Project PBP</p>
       </footer>

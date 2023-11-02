@@ -32,7 +32,7 @@ export default function DetailLiked() {
               .from("liked_pekerjaan")
               .select(
                 `
-                        loker: idloker( idloker, nama )
+                        loker: idloker( idloker, nama, perusahaan: idperusahaan ( nama ) )
                         `
               )
               .eq("idpencaker", penggunaData[0].noktp);
@@ -74,6 +74,12 @@ export default function DetailLiked() {
                 scope="col"
                 className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-300"
               >
+                Perusahaan
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-300"
+              >
                 Action
               </th>
             </tr>
@@ -89,6 +95,11 @@ export default function DetailLiked() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900 dark:text-gray-100">
                     {loker.loker.nama}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900 dark:text-gray-100">
+                    {loker.loker.perusahaan.nama}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">

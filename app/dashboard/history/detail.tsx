@@ -1,3 +1,6 @@
+"use client";
+
+import { Chip } from "@mui/material";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -25,7 +28,7 @@ export default function DetailHistory() {
               .from("tahapan_apply")
               .select(
                 `
-                        apply_loker: idapply ( loker: idloker (nama), noktp ),
+                        apply_loker: idapply ( loker: idloker (nama, perusahaan: idperusahaan(nama)), noktp ),
                         tahapan: idtahapan ( idtahapan, nama ),
                         nilai
                         `
@@ -47,7 +50,7 @@ export default function DetailHistory() {
   return (
     <>
       <h2 className="mb-4 text-lg font-medium text-gray-900 dark:text-gray-100">
-        Pekerjaan yang anda sukai
+        History apply pekerjaan anda
       </h2>
       <div className="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg dark:bg-gray-800">
         <table className="w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -63,7 +66,13 @@ export default function DetailHistory() {
                 scope="col"
                 className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-300"
               >
-                Nama
+                Pekerjaan
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-300"
+              >
+                Perusahaan
               </th>
               <th
                 scope="col"
@@ -89,11 +98,28 @@ export default function DetailHistory() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900 dark:text-gray-100">
-                    {history.history.apply_loker.loker.nama}
+                    {history.apply_loker.loker.nama}
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap"></td>
-                <td className="px-6 py-4 whitespace-nowrap"></td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900 dark:text-gray-100">
+                    {history.apply_loker.loker.perusahaan.nama}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900 dark:text-gray-100">
+                    {history.tahapan.nama}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <Chip
+                    label={history.nilai == 1 ? "Lolos" : "Tidak Lolos"}
+                    style={{
+                      backgroundColor: history.nilai == 1 ? "green" : "red",
+                      color: "white",
+                    }}
+                  />
+                </td>
               </tr>
             ))}
           </tbody>
