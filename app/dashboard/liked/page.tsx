@@ -1,19 +1,18 @@
-import React from "react";
 import AuthButton from "@/components/AuthButton";
 import Header from "@/components/Header";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 
-import { Button } from "@mui/material";
-import DetailLiked from "./detail";
 import Link from "next/link";
+import DetailLiked from "./detail";
 export default async function liked() {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) window.location.href = "/login";
+
   const canInitSupabaseClient = () => {
     try {
       createClient(cookieStore);
@@ -24,7 +23,7 @@ export default async function liked() {
   };
   const isLoggedIn = user ? true : false;
   const isSupabaseConnected = canInitSupabaseClient();
-  return (
+  return user ? (
     <div className="flex flex-col items-center flex-1 w-full gap-20">
       <nav className="flex justify-center w-full h-16 border-b border-b-foreground/10">
         <div className="flex items-center justify-between w-full max-w-4xl p-3 text-sm">
@@ -46,5 +45,7 @@ export default async function liked() {
         <p>Built For Web Project PBP</p>
       </footer>
     </div>
+  ) : (
+    <div>Please Login</div>
   );
 }
